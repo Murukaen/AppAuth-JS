@@ -37,12 +37,18 @@ export class NodeBasedHandler extends AuthorizationRequestHandler {
   // the handle to the current authorization request
   authorizationPromise: Promise<AuthorizationRequestResponse|null>|null = null;
 
+  private message = 'Close your browser to continue'
+
   constructor(
       // default to port 8000
       public httpServerPort = 8000,
       utils: QueryStringUtils = new BasicQueryStringUtils(),
       crypto: Crypto = new NodeCrypto()) {
     super(utils, crypto);
+  }
+
+  setMessage(message: string) {
+    this.message = message
   }
 
   performAuthorizationRequest(
@@ -88,7 +94,9 @@ export class NodeBasedHandler extends AuthorizationRequestHandler {
         error: authorizationError
       } as AuthorizationRequestResponse;
       emitter.emit(ServerEventsEmitter.ON_AUTHORIZATION_RESPONSE, completeResponse);
-      response.end('Close your browser to continue');
+      response.writeHead(200, {'Content-Type': 'text/html'});
+      response.write(this.message);
+      response.end();
     };
 
     this.authorizationPromise = new Promise<AuthorizationRequestResponse>((resolve, reject) => {

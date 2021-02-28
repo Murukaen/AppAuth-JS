@@ -6,7 +6,9 @@ import { QueryStringUtils } from '../query_string_utils';
 export declare class NodeBasedHandler extends AuthorizationRequestHandler {
     httpServerPort: number;
     authorizationPromise: Promise<AuthorizationRequestResponse | null> | null;
+    private message;
     constructor(httpServerPort?: number, utils?: QueryStringUtils, crypto?: Crypto);
+    setMessage(message: string): void;
     performAuthorizationRequest(configuration: AuthorizationServiceConfiguration, request: AuthorizationRequest): void;
     protected completeAuthorizationRequest(): Promise<AuthorizationRequestResponse | null>;
 }
